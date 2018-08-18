@@ -15,7 +15,7 @@ import UIKit
 
         case none
         case dimmed
-        case blurred(style: UIBlurEffectStyle, isDark: Bool)
+        case blurred(style: UIBlurEffect.Style, isDark: Bool)
 
         var isDark: Bool {
 
@@ -68,7 +68,7 @@ extension BulletinBackgroundViewStyle {
      */
 
     @available(iOS 10, *)
-    @objc public static func blurred(style: UIBlurEffectStyle, isDark: Bool) -> BulletinBackgroundViewStyle {
+    @objc public static func blurred(style: UIBlurEffect.Style, isDark: Bool) -> BulletinBackgroundViewStyle {
         return BulletinBackgroundViewStyle(rawValue: .blurred(style: style, isDark: isDark))
     }
 

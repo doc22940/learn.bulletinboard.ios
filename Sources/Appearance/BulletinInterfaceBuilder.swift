@@ -29,7 +29,7 @@ import UIKit
         let titleLabel = UILabel()
         titleLabel.textAlignment = .center
         titleLabel.textColor = appearance.titleTextColor
-        titleLabel.accessibilityTraits |= UIAccessibilityTraitHeader
+        titleLabel.accessibilityTraits.formUnion(UIAccessibilityTraits.header)
         titleLabel.numberOfLines = 1
         titleLabel.adjustsFontSizeToFitWidth = true
 

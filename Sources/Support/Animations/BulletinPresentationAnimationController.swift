@@ -65,7 +65,7 @@ class BulletinPresentationAnimationController: NSObject, UIViewControllerAnimate
         // Animate presentation
 
         let duration = transitionDuration(using: transitionContext)
-        let options = UIViewAnimationOptions(rawValue: 7 << 16)
+        let options = UIView.AnimationOptions(rawValue: 7 << 16)
 
         let animations = {
 

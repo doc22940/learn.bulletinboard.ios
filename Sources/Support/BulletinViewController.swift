@@ -380,7 +380,7 @@ extension BulletinViewController {
     }
 
     @available(iOS 11.0, *)
-    override func prefersHomeIndicatorAutoHidden() -> Bool {
+    override var prefersHomeIndicatorAutoHidden: Bool {
         return manager?.hidesHomeIndicator ?? false
     }
 
@@ -432,7 +432,7 @@ extension BulletinViewController {
             return
         }
 
-        let blurStyle: UIBlurEffectStyle = isDark ? .dark : .extraLight
+        let blurStyle: UIBlurEffect.Style = isDark ? .dark : .extraLight
         bottomSafeAreaCoverView.effect = UIBlurEffect(style: blurStyle)
 
     }
@@ -460,7 +460,7 @@ extension BulletinViewController {
         }
 
         UIView.animate(withDuration: 0.25, animations: animations) { _ in
-            UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, self.activityIndicator)
+            UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self.activityIndicator)
         }
 
     }
@@ -523,7 +523,7 @@ extension BulletinViewController: UIViewControllerTransitioningDelegate {
 
     /// Prepares the view controller for dismissal.
     func prepareForDismissal(displaying snapshot: UIView) {
-        view.bringSubview(toFront: bottomSafeAreaCoverView)
+        view.bringSubviewToFront(bottomSafeAreaCoverView)
         activeSnapshotView = snapshot
     }
 
@@ -533,13 +533,13 @@ extension BulletinViewController: UIViewControllerTransitioningDelegate {
 
 extension BulletinViewController {
     func setUpKeyboardLogic() {
-        NotificationCenter.default.addObserver(self, selector: #selector(onKeyboardShow), name: .UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(onKeyboardHide), name: .UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onKeyboardShow), name: UIApplication.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onKeyboardHide), name: UIApplication.keyboardWillHideNotification, object: nil)
     }
 
     func cleanUpKeyboardLogic() {
-        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIApplication.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIApplication.keyboardWillHideNotification, object: nil)
     }
 
     @objc func onKeyboardShow(_ notification: Notification) {
@@ -549,15 +549,15 @@ extension BulletinViewController {
         }
 
         guard let userInfo = notification.userInfo,
-            let keyboardFrameFinal = userInfo[UIKeyboardFrameEndUserInfoKey] as? CGRect,
-            let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double,
-            let curveInt = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int
+            let keyboardFrameFinal = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+            let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
+            let curveInt = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int
         else {
             return
         }
 
-        let animationCurve = UIViewAnimationCurve(rawValue: curveInt) ?? .linear
-        let animationOptions = UIViewAnimationOptions(curve: animationCurve)
+        let animationCurve = UIView.AnimationCurve(rawValue: curveInt) ?? .linear
+        let animationOptions = UIView.AnimationOptions(curve: animationCurve)
 
         UIView.animate(withDuration: duration, delay: 0, options: animationOptions, animations: {
             var bottomSpacing = -(keyboardFrameFinal.size.height + self.bottomMargin())
@@ -586,14 +586,14 @@ extension BulletinViewController {
         }
 
         guard let userInfo = notification.userInfo,
-            let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double,
-            let curveInt = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int
+            let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
+            let curveInt = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int
         else {
             return
         }
 
-        let animationCurve = UIViewAnimationCurve(rawValue: curveInt) ?? .linear
-        let animationOptions = UIViewAnimationOptions(curve: animationCurve)
+        let animationCurve = UIView.AnimationCurve(rawValue: curveInt) ?? .linear
+        let animationOptions = UIView.AnimationOptions(curve: animationCurve)
 
         UIView.animate(withDuration: duration, delay: 0, options: animationOptions, animations: {
             self.minYConstraint.isActive = true
@@ -605,9 +605,9 @@ extension BulletinViewController {
     }
 }
 
-extension UIViewAnimationOptions {
-    init(curve: UIViewAnimationCurve) {
-        self = UIViewAnimationOptions(rawValue: UInt(curve.rawValue << 16))
+extension UIView.AnimationOptions {
+    init(curve: UIView.AnimationCurve) {
+        self = UIView.AnimationOptions(rawValue: UInt(curve.rawValue << 16))
     }
 }
 

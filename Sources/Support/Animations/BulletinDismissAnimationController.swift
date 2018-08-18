@@ -58,7 +58,7 @@ class BulletinDismissAnimationController: NSObject, UIViewControllerAnimatedTran
         // Animate dismissal
 
         let duration = transitionDuration(using: transitionContext)
-        let options = UIViewAnimationOptions(rawValue: 6 << 16)
+        let options = UIView.AnimationOptions(rawValue: 6 << 16)
 
         let animations = {
             snapshot.frame.origin.y = rootView.frame.maxY + 12
